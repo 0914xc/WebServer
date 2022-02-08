@@ -1,6 +1,8 @@
 package cn.weixiaochen.catalina.core;
 
 import cn.weixiaochen.catalina.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
@@ -9,6 +11,8 @@ import java.io.File;
  * @author 魏小宸 2022/1/23
  */
 public class StandardHost extends ContainerBase implements Host {
+
+    final static Logger logger = LoggerFactory.getLogger(StandardHost.class);
 
     protected String appBase = null;
 
@@ -21,7 +25,11 @@ public class StandardHost extends ContainerBase implements Host {
 
     @Override
     protected void startInternal() {
-        depolyApps();
+        try {
+            depolyApps();
+        } catch (Exception e) {
+            logger.error("webapps文件夹为空", e);
+        }
     }
 
     @Override
@@ -49,10 +57,20 @@ public class StandardHost extends ContainerBase implements Host {
         return appBaseFile;
     }
 
-    public void depolyApps() {
+    public void depolyApps() throws Exception {
         File appBase = getAppBaseFile();
-        for (File file : appBase.listFiles()) {
-            System.out.println(file.toPath());
+        File[] webapps = appBase.listFiles();
+        if (webapps == null) {
+            throw new Exception("webapps文件夹为空");
+        }
+
+        for (File file : webapps) {
+            logger.info(file.toString());
+            if (file.isDirectory()) {
+                Context context = new StandardContext();
+                context.setName(file.getName()); // 默认context的名字为web文件夹的名字
+                this.addChild(context);
+            }
         }
     }
 }

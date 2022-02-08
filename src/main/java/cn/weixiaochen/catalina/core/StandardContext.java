@@ -17,6 +17,8 @@ public class StandardContext extends ContainerBase implements Context {
     @Override
     protected void startInternal() {
 
+        webConfig();
+
     }
 
     @Override
@@ -28,4 +30,12 @@ public class StandardContext extends ContainerBase implements Context {
     protected void destroyInternal() {
 
     }
+
+    private void webConfig() {
+
+    }
+
+
+
+
 }

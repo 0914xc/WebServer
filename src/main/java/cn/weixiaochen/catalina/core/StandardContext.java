@@ -150,7 +150,7 @@ public class StandardContext extends ContainerBase implements Context {
     }
 
     /**
-     *
+     * Process the application configuration file, if it exists.
      */
     private void applicationConfig(Digester webDigester) {
 

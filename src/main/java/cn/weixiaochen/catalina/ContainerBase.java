@@ -30,12 +30,15 @@ public abstract class ContainerBase extends LifecycleBase implements Container {
     }
 
     @Override
-    public void setParent(Container container) {
-        this.parent = container;
+    public void setParent(Container parent) {
+        this.parent = parent;
     }
 
     @Override
     public Container findChild(String name) {
+        if (name == null) {
+            return null;
+        }
         return children.get(name);
     }
 
@@ -45,8 +48,8 @@ public abstract class ContainerBase extends LifecycleBase implements Container {
     }
 
     @Override
-    public void addChild(Container container) {
-        container.setParent(this);
-        children.put(getName(), container);
+    public void addChild(Container child) {
+        child.setParent(this);
+        children.put(child.getName(), child);
     }
 }

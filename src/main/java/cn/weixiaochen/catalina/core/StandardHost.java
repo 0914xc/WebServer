@@ -14,7 +14,7 @@ public class StandardHost extends ContainerBase implements Host {
 
     final static Logger logger = LoggerFactory.getLogger(StandardHost.class);
 
-    protected String appBase = null;
+    protected String appBase = "webapps";
 
     protected File appBaseFile = null;
 
@@ -27,6 +27,9 @@ public class StandardHost extends ContainerBase implements Host {
     protected void startInternal() {
         try {
             depolyApps();
+            for (Container child : findChildren()) {
+                child.start();
+            }
         } catch (Exception e) {
             logger.error("webapps文件夹为空", e);
         }
@@ -65,12 +68,13 @@ public class StandardHost extends ContainerBase implements Host {
         }
 
         for (File file : webapps) {
-            logger.info(file.toString());
             if (file.isDirectory()) {
                 Context context = new StandardContext();
                 context.setName(file.getName()); // 默认context的名字为web文件夹的名字
+                context.setPath(file.getPath());
                 this.addChild(context);
             }
         }
     }
+
 }

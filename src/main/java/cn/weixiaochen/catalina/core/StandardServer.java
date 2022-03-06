@@ -37,6 +37,7 @@ public class StandardServer extends LifecycleBase implements Server {
 
     @Override
     public void addService(Service service) {
+        service.setServer(this);
         services.add(service);
     }
 }

@@ -2,6 +2,7 @@ package cn.weixiaochen.catalina.core;
 
 import cn.weixiaochen.catalina.Engine;
 import cn.weixiaochen.catalina.LifecycleBase;
+import cn.weixiaochen.catalina.Server;
 import cn.weixiaochen.catalina.Service;
 import cn.weixiaochen.catalina.connector.Connector;
 
@@ -13,9 +14,11 @@ import java.util.List;
  */
 public class StandardService extends LifecycleBase implements Service {
 
-    protected Engine engine;
+    private Server server;
 
-    protected List<Connector> connectors = new ArrayList<>();
+    private Engine engine;
+
+    private List<Connector> connectors = new ArrayList<>();
 
     @Override
     protected void initInternal() {
@@ -47,6 +50,18 @@ public class StandardService extends LifecycleBase implements Service {
 
     @Override
     public void setContainer(Engine engine) {
+        engine.setService(this);
         this.engine = engine;
     }
+
+    @Override
+    public Server getServer() {
+        return this.server;
+    }
+
+    @Override
+    public void setServer(Server server) {
+        this.server = server;
+    }
+
 }

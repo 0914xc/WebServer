@@ -11,4 +11,17 @@ public interface Service extends Lifecycle {
     void addConnector(Connector connector);
 
     void setContainer(Engine engine);
+
+    /**
+     * @return the <code>Server</code> with which we are associated (if any).
+     */
+    Server getServer();
+
+    /**
+     * Set the <code>Server</code> with which we are associated (if any).
+     *
+     * @param server The server that owns this Service
+     */
+    void setServer(Server server);
+
 }

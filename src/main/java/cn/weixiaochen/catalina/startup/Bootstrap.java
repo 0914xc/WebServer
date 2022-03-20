@@ -3,10 +3,11 @@ package cn.weixiaochen.catalina.startup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.lang.reflect.Method;
 
 /**
- * @author 魏小宸 2021/11/9
+ * @author 0914xc 2021/11/9
  */
 public class Bootstrap {
 
@@ -22,14 +23,13 @@ public class Bootstrap {
      */
     private Object catalinaDaemon = null;
 
-
     public static void main(String[] args) {
 
         Bootstrap bootstrap = new Bootstrap();
         try {
             bootstrap.init();
-        } catch (Exception e) {
-            logger.info("Catalina init failed！", e);
+        } catch (Throwable t) {
+            logger.error("Bootstrap init failed.", t);
         }
 
         daemon = bootstrap;
@@ -37,8 +37,9 @@ public class Bootstrap {
         try {
             daemon.load();
             daemon.start();
-        } catch (Exception e) {
-            logger.info("Catalina start failed！", e);
+        } catch (Throwable t) {
+            logger.error("Bootstrap start failed.", t);
+            System.exit(1);
         }
     }
 
@@ -55,5 +56,10 @@ public class Bootstrap {
     public void start() throws Exception {
         Method method = catalinaDaemon.getClass().getMethod("start");
         method.invoke(catalinaDaemon, (Object[])null);
+    }
+
+    public static String getCatalinaBase() {
+        return Bootstrap.class.getResource("/").getPath()
+                .replace("/target/classes", "");
     }
 }

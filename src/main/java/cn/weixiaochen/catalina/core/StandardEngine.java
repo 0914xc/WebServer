@@ -1,33 +1,38 @@
 package cn.weixiaochen.catalina.core;
 
 import cn.weixiaochen.catalina.*;
+import cn.weixiaochen.catalina.valves.StandardEngineValve;
 
 /**
- * @author 魏小宸 2022/1/23
+ * @author 0914xc 2022/1/23
  */
 public class StandardEngine extends ContainerBase implements Engine {
 
     private Service service = null;
 
+    public StandardEngine() {
+        pipeline.setBasic(new StandardEngineValve());
+    }
+
     @Override
-    protected void initInternal() {
+    protected void initInternal() throws LifecycleException {
 
     }
 
     @Override
-    protected void startInternal() {
+    protected void startInternal() throws LifecycleException {
         for (Container child : findChildren()) {
             child.start();
         }
     }
 
     @Override
-    protected void stopInternal() {
+    protected void stopInternal() throws LifecycleException {
 
     }
 
     @Override
-    protected void destroyInternal() {
+    protected void destroyInternal() throws LifecycleException {
 
     }
 

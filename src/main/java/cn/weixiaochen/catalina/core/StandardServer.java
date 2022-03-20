@@ -1,37 +1,38 @@
 package cn.weixiaochen.catalina.core;
 
-import cn.weixiaochen.catalina.Lifecycle;
-import cn.weixiaochen.catalina.LifecycleBase;
-import cn.weixiaochen.catalina.Server;
-import cn.weixiaochen.catalina.Service;
+import cn.weixiaochen.catalina.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author 魏小宸 2022/1/23
+ * @author 0914xc 2022/1/23
  */
 public class StandardServer extends LifecycleBase implements Server {
 
     protected List<Service> services = new ArrayList<>();
 
     @Override
-    protected void initInternal() {
-        services.forEach(Lifecycle::init);
+    protected void initInternal() throws LifecycleException {
+        for (Service service : services) {
+            service.init();
+        }
     }
 
     @Override
-    protected void startInternal() {
-        services.forEach(Lifecycle::start);
+    protected void startInternal() throws LifecycleException {
+        for (Service service : services) {
+            service.start();
+        }
     }
 
     @Override
-    protected void stopInternal() {
+    protected void stopInternal() throws LifecycleException {
 
     }
 
     @Override
-    protected void destroyInternal() {
+    protected void destroyInternal() throws LifecycleException {
 
     }
 

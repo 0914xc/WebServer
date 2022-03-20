@@ -2,7 +2,8 @@ package cn.weixiaochen.catalina.mapper;
 
 
 /**
- * @author 魏小宸 2022/1/1
+ * @author 0914xc 2022/1/1
  */
-public interface Mapper {
+public class Mapper {
+    
 }

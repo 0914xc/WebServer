@@ -1,16 +1,13 @@
 package cn.weixiaochen.catalina.core;
 
-import cn.weixiaochen.catalina.Engine;
-import cn.weixiaochen.catalina.LifecycleBase;
-import cn.weixiaochen.catalina.Server;
-import cn.weixiaochen.catalina.Service;
+import cn.weixiaochen.catalina.*;
 import cn.weixiaochen.catalina.connector.Connector;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author 魏小宸 2022/1/23
+ * @author 0914xc 2022/1/23
  */
 public class StandardService extends LifecycleBase implements Service {
 
@@ -21,25 +18,28 @@ public class StandardService extends LifecycleBase implements Service {
     private List<Connector> connectors = new ArrayList<>();
 
     @Override
-    protected void initInternal() {
+    protected void initInternal() throws LifecycleException {
         engine.init();
-        connectors.forEach(LifecycleBase::init);
-
+        for (Connector connector : connectors) {
+            connector.init();
+        }
     }
 
     @Override
-    protected void startInternal() {
+    protected void startInternal() throws LifecycleException {
         engine.start();
-        connectors.forEach(LifecycleBase::start);
+        for (Connector connector : connectors) {
+            connector.start();
+        }
     }
 
     @Override
-    protected void stopInternal() {
+    protected void stopInternal() throws LifecycleException {
 
     }
 
     @Override
-    protected void destroyInternal() {
+    protected void destroyInternal() throws LifecycleException {
 
     }
 
@@ -49,9 +49,16 @@ public class StandardService extends LifecycleBase implements Service {
     }
 
     @Override
-    public void setContainer(Engine engine) {
-        engine.setService(this);
-        this.engine = engine;
+    public Container getContainer() {
+        return this.engine;
+    }
+
+    @Override
+    public void setContainer(Container container) {
+        if (container instanceof Engine) {
+            ((Engine) container).setService(this);
+            this.engine = (Engine) container;
+        }
     }
 
     @Override

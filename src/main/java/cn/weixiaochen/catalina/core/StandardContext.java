@@ -1,10 +1,9 @@
 package cn.weixiaochen.catalina.core;
 
-import cn.weixiaochen.catalina.Context;
-import cn.weixiaochen.catalina.ContainerBase;
-import cn.weixiaochen.catalina.Wrapper;
+import cn.weixiaochen.catalina.*;
 import cn.weixiaochen.catalina.startup.Constants;
 import cn.weixiaochen.catalina.tomcat.web.WebRuleSet;
+import cn.weixiaochen.catalina.valves.StandardContextValve;
 import org.apache.commons.digester.Digester;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +13,7 @@ import java.io.*;
 import java.util.HashMap;
 
 /**
- * @author 魏小宸 2021/12/12
+ * @author 0914xc 2021/12/12
  */
 public class StandardContext extends ContainerBase implements Context {
 
@@ -24,23 +23,30 @@ public class StandardContext extends ContainerBase implements Context {
 
     private final HashMap<String, String> servletMappings = new HashMap<>();
 
+    public StandardContext() {
+        pipeline.setBasic(new StandardContextValve());
+    }
+
     @Override
-    protected void initInternal() {
+    protected void initInternal() throws LifecycleException {
 
     }
 
     @Override
-    protected void startInternal() {
+    protected void startInternal() throws LifecycleException {
+        // Notify our interested LifecycleListeners
+//        fireLifecycleEvent(Lifecycle.CONFIGURE_START_EVENT, null);
+
         webConfig();
     }
 
     @Override
-    protected void stopInternal() {
+    protected void stopInternal() throws LifecycleException {
 
     }
 
     @Override
-    protected void destroyInternal() {
+    protected void destroyInternal() throws LifecycleException {
 
     }
 

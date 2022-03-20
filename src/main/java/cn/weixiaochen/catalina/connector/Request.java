@@ -1,71 +1,49 @@
 package cn.weixiaochen.catalina.connector;
 
+import cn.weixiaochen.catalina.Context;
+import cn.weixiaochen.catalina.Host;
+import cn.weixiaochen.catalina.Wrapper;
+import cn.weixiaochen.catalina.mapper.MappingData;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
 import java.security.Principal;
 import java.util.*;
 
 /**
- * @author 魏小宸 2021/11/9
+ * @author 0914xc 2021/11/9
  */
 public class Request implements HttpServletRequest {
 
-    // 请求内容类型
-    private String contentType;
 
-    // 请求内容长度
-    private int contentLength;
+    public Request() {
 
-    // Internet协议（IP）地址
-    private InetAddress inetAddress;
-
-    // Socket客户端输入流
-    private InputStream input;
-
-    // HTTP请求方法
-    private String method;
-
-    // HTTP请求协议
-    private String protocol;
-
-    // HTTP请求URI
-    private String requestURI;
-
-    // URI携带的查询参数
-    private String  queryString;
-
-    // 请求头, key:请求头名称 value:请求头内容数组
-    private Map<String, ArrayList<String>> headers = new HashMap<>();
-
-    public Request(InputStream input) {
-        this.input = input;
     }
 
-    public void setMethod(String method) {
-        this.method = method;
+    /**
+     * Coyote request.
+     */
+    protected cn.weixiaochen.coyote.Request coyoteRequest;
+
+    /**
+     * Set the Coyote request.
+     *
+     * @param coyoteRequest The Coyote request
+     */
+    public void setCoyoteRequest(cn.weixiaochen.coyote.Request coyoteRequest) {
+        this.coyoteRequest = coyoteRequest;
     }
 
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
-    }
-
-    public void setRequestURI(String requestURI) {
-        this.requestURI = requestURI;
-    }
-
-    public void setQueryString(String queryString) {
-        this.queryString = queryString;
-    }
-
-    public void addHeader(String name, String value) {
-        name = name.toLowerCase();
-        ArrayList<String> values = headers.computeIfAbsent(name, k -> new ArrayList<>());
-        values.add(value);
+    /**
+     * Get the Coyote request.
+     *
+     * @return the Coyote request object
+     */
+    public cn.weixiaochen.coyote.Request getCoyoteRequest() {
+        return this.coyoteRequest;
     }
 
     @Override
@@ -105,7 +83,7 @@ public class Request implements HttpServletRequest {
 
     @Override
     public String getMethod() {
-        return method;
+        return null;
     }
 
     @Override
@@ -150,7 +128,7 @@ public class Request implements HttpServletRequest {
 
     @Override
     public String getRequestURI() {
-        return requestURI;
+        return null;
     }
 
     @Override
@@ -412,4 +390,56 @@ public class Request implements HttpServletRequest {
     public DispatcherType getDispatcherType() {
         return null;
     }
+
+    /**
+     * The response with which this request is associated.
+     */
+    protected cn.weixiaochen.catalina.connector.Response response = null;
+
+    /**
+     * @return the Response with which this Request is associated.
+     */
+    public cn.weixiaochen.catalina.connector.Response getResponse() {
+        return this.response;
+    }
+
+    /**
+     * Set the Response with which this Request is associated.
+     *
+     * @param response The new associated response
+     */
+    public void setResponse(Response response) {
+        this.response = response;
+    }
+
+    /**
+     * Mapping data.
+     */
+    protected final MappingData mappingData = new MappingData();
+
+    public MappingData getMappingData() {
+        return mappingData;
+    }
+
+    /**
+     * @return the Host within which this Request is being processed.
+     */
+    public Host getHost() {
+        return mappingData.host;
+    }
+
+    /**
+     * @return the Context within which this Request is being processed.
+     */
+    public Context getContext() {
+        return mappingData.context;
+    }
+
+    /**
+     * @return the Wrapper within which this Request is being processed.
+     */
+    public Wrapper getWrapper() {
+        return mappingData.wrapper;
+    }
+
 }

@@ -1,7 +1,7 @@
 package cn.weixiaochen.catalina;
 
 /**
- * @author 魏小宸 2021/12/11
+ * @author 0914xc 2021/12/11
  */
 public interface Container extends Lifecycle {
 
@@ -18,5 +18,7 @@ public interface Container extends Lifecycle {
     Container[] findChildren();
 
     void addChild(Container container);
+
+    Pipeline getPipeline();
 
 }

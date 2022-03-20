@@ -1,5 +1,7 @@
 package cn.weixiaochen.catalina.startup;
 
+import cn.weixiaochen.catalina.Host;
+import cn.weixiaochen.catalina.LifecycleException;
 import cn.weixiaochen.catalina.Server;
 import org.apache.commons.digester.Digester;
 import org.slf4j.Logger;
@@ -10,46 +12,83 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * @author 魏小宸 2022/1/23
+ * @author 0914xc 2022/1/23
  */
 public class Catalina {
 
     private final static Logger logger = LoggerFactory.getLogger(Catalina.class);
 
+    /**
+     * Pathname to the server configuration file.
+     */
     protected String configFile = "conf/server.xml";
 
     protected Server server = null;
 
+    public void setConfigFile(String file) {
+        configFile = file;
+    }
+
+    public String getConfigFile() {
+        return configFile;
+    }
+
+    public Catalina() {
+    }
+
+    /**
+     * Start a new server instance.
+     */
     public void load() {
+
+        // Create and execute our Digester
+        Digester digester = createStartDigester();
+
         try {
-            parseServerXml();
+            File file = configFile();
+            // Make the Catalina as the top element of the Stack
+            digester.push(this);
+            digester.parse(file);
         } catch (IOException | SAXException e) {
-            logger.info("解析server.xml失败！", e);
+            logger.error("Unable to load server configuration from {}", getConfigFile(), e);
         }
-        getServer().init();
+
+        // start the new server
+        try {
+            getServer().init();
+        } catch (LifecycleException e) {
+            logger.error("Catalina.start", e);
+        }
     }
 
+    /**
+     * Start a new server instance
+     */
     public void start() {
-        getServer().start();
+
+        if (getServer() == null) {
+            load();
+        }
+
+        if (getServer() == null) {
+            logger.error("Cannot start server. Server instance is not configured.");
+            return;
+        }
+
+        // Start the new server
+        try {
+            getServer().start();
+        } catch (LifecycleException e) {
+            logger.error("The required Server component failed to start so Tomcat is unable to start.");
+        }
     }
 
-    protected void parseServerXml() throws IOException, SAXException {
-        Digester digester = createDigester();
-        // 将catalina作为栈顶元素
-        digester.push(this);
-
-        digester.parse(configFile());
-
-    }
-
-    protected Digester createDigester() {
-        // 创建Digester解析器
+    protected Digester createStartDigester() {
+        // Initialize the digester
         Digester digester = new Digester();
-
-        // 不使用DTD规则对Xml文件进行校验
         digester.setValidating(false);
 
-        // 设置解析规则
+        // Configure the actions we will be using
         digester.addObjectCreate("Server", "cn.weixiaochen.catalina.core.StandardServer");
         digester.addSetProperties("Server");
         digester.addSetNext("Server", "setServer", "cn.weixiaochen.catalina.Server");
@@ -58,25 +97,29 @@ public class Catalina {
         digester.addSetProperties("Server/Service");
         digester.addSetNext("Server/Service", "addService", "cn.weixiaochen.catalina.Service");
 
-        digester.addObjectCreate("Server/Service/Connector", "cn.weixiaochen.catalina.connector.Connector");
+        digester.addRule("Server/Service/Connector", new ConnectorCreateRule());
         digester.addSetProperties("Server/Service/Connector");
         digester.addSetNext("Server/Service/Connector", "addConnector", "cn.weixiaochen.catalina.connector.Connector");
 
-        digester.addObjectCreate("Server/Service/Engine", "cn.weixiaochen.catalina.core.StandardEngine");
-        digester.addSetProperties("Server/Service/Engine");
-        digester.addSetNext("Server/Service/Engine", "setContainer", "cn.weixiaochen.catalina.Engine");
+        // Add RuleSets for nested elements
+        digester.addRuleSet(new EngineRuleSet("Server/Service/"));
+        digester.addRuleSet(new HostRuleSet("Server/Service/Engine/"));
+        digester.addRuleSet(new ContextRuleSet("Server/Service/Engine/Host/"));
 
-        digester.addObjectCreate("Server/Service/Engine/Host", "cn.weixiaochen.catalina.core.StandardHost");
-        digester.addSetProperties("Server/Service/Engine/Host");
-        digester.addSetNext("Server/Service/Engine/Host", "addChild", "cn.weixiaochen.catalina.Container");
 
         return digester;
     }
 
+    /**
+     * Return a File object representing our configuration file.
+     * @return the main configuration file
+     */
     private File configFile() {
-        String catalinaBase = this.getClass().getResource("/").getPath()
-                .replace("/target/classes", "");
-        return new File(catalinaBase, configFile);
+        File file = new File(configFile);
+        if (!file.isAbsolute()) {
+            file = new File(Bootstrap.getCatalinaBase(), configFile);
+        }
+        return file;
     }
 
     public Server getServer() {

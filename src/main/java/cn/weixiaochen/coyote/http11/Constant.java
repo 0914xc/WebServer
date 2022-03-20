@@ -1,8 +1,8 @@
-package cn.weixiaochen.coyote.http;
+package cn.weixiaochen.coyote.http11;
 
 /**
  * http报文常量
- * @author 魏小宸 2022/1/22
+ * @author 0914xc 2022/1/22
  */
 public class Constant {
 

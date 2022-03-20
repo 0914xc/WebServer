@@ -10,11 +10,27 @@ import java.util.Collection;
 import java.util.Locale;
 
 /**
- * @author 魏小宸 2021/11/9
+ * @author 0914xc 2021/11/9
  */
 public class Response implements HttpServletResponse {
 
-    public Response(OutputStream outputStream) {
+    public Response() {
+    }
+
+    /**
+     * Coyote response.
+     */
+    protected cn.weixiaochen.coyote.Response coyoteResponse;
+
+    public void setCoyoteResponse(cn.weixiaochen.coyote.Response coyoteResponse) {
+        this.coyoteResponse = coyoteResponse;
+    }
+
+    /**
+     * @return the Coyote response.
+     */
+    public cn.weixiaochen.coyote.Response getCoyoteResponse() {
+        return this.coyoteResponse;
     }
 
     @Override
@@ -200,5 +216,26 @@ public class Response implements HttpServletResponse {
     @Override
     public Locale getLocale() {
         return null;
+    }
+
+    /**
+     * The request with which this response is associated.
+     */
+    protected Request request = null;
+
+    /**
+     * @return the Request with which this Response is associated.
+     */
+    public cn.weixiaochen.catalina.connector.Request getRequest() {
+        return this.request;
+    }
+
+    /**
+     * Set the Request with which this Response is associated.
+     *
+     * @param request The new associated request
+     */
+    public void setRequest(Request request) {
+
     }
 }

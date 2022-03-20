@@ -1,10 +1,12 @@
 package cn.weixiaochen.catalina;
 
+import cn.weixiaochen.catalina.core.StandardPipeline;
+
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author 魏小宸 2021/12/12
+ * @author 0914xc 2021/12/12
  */
 public abstract class ContainerBase extends LifecycleBase implements Container {
 
@@ -13,6 +15,11 @@ public abstract class ContainerBase extends LifecycleBase implements Container {
     protected Container parent = null;
 
     protected final Map<String, Container> children = new HashMap<>();
+
+    /**
+     * The Pipeline object with which this Container is associated.
+     */
+    protected final Pipeline pipeline = new StandardPipeline(this);
 
     @Override
     public String getName() {
@@ -51,5 +58,14 @@ public abstract class ContainerBase extends LifecycleBase implements Container {
     public void addChild(Container child) {
         child.setParent(this);
         children.put(child.getName(), child);
+    }
+
+    @Override
+    public Pipeline getPipeline() {
+        return this.pipeline;
+    }
+
+    public void addValue(Valve valve) {
+        pipeline.addValue(valve);
     }
 }

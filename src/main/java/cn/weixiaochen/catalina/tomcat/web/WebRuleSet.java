@@ -7,6 +7,9 @@ import org.apache.commons.digester.Rule;
 import org.apache.commons.digester.RuleSetBase;
 import org.xml.sax.Attributes;
 
+/**
+ * @author 0914xc 2022/3/6
+ */
 public class WebRuleSet extends RuleSetBase {
 
     protected String prefix;

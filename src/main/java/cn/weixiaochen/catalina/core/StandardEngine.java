@@ -21,9 +21,8 @@ public class StandardEngine extends ContainerBase implements Engine {
 
     @Override
     protected void startInternal() throws LifecycleException {
-        for (Container child : findChildren()) {
-            child.start();
-        }
+        // Standard container startup
+        super.startInternal();
     }
 
     @Override

@@ -1,6 +1,8 @@
 package cn.weixiaochen.catalina;
 
 import cn.weixiaochen.catalina.core.StandardPipeline;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +11,8 @@ import java.util.Map;
  * @author 0914xc 2021/12/12
  */
 public abstract class ContainerBase extends LifecycleBase implements Container {
+
+    private static final Logger logger = LoggerFactory.getLogger(ContainerBase.class);
 
     protected String name = null;
 
@@ -58,6 +62,15 @@ public abstract class ContainerBase extends LifecycleBase implements Container {
     public void addChild(Container child) {
         child.setParent(this);
         children.put(child.getName(), child);
+
+        // Start child
+        try {
+            if (getState().isAvailable()) {
+                child.start();
+            }
+        } catch (LifecycleException e) {
+            logger.error("Error starting child");
+        }
     }
 
     @Override
@@ -67,5 +80,21 @@ public abstract class ContainerBase extends LifecycleBase implements Container {
 
     public void addValue(Valve valve) {
         pipeline.addValue(valve);
+    }
+
+    @Override
+    protected void startInternal() throws LifecycleException {
+        // Start our subordinate components, if any
+
+        // Start our child containers, if any
+        Container[] children = findChildren();
+        for (Container child : children) {
+            child.start();
+        }
+
+
+        // Start the Valves in our pipeline (including the basic), if any
+
+        setState(LifecycleState.STARTING);
     }
 }

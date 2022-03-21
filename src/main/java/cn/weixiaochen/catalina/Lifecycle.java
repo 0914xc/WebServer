@@ -61,4 +61,6 @@ public interface Lifecycle {
     void stop() throws LifecycleException;
 
     void destroy() throws LifecycleException;
+
+    LifecycleState getState();
 }

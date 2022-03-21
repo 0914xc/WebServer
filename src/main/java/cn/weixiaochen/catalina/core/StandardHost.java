@@ -31,18 +31,7 @@ public class StandardHost extends ContainerBase implements Host {
 
     @Override
     protected void startInternal() throws LifecycleException {
-        // Notify our interested LifecycleListeners
-//        fireLifecycleEvent(Lifecycle.CONFIGURE_START_EVENT, null);
-        setState(LifecycleState.STARTING);
-        try {
-
-            for (Container child : findChildren()) {
-                child.start();
-            }
-        } catch (Exception e) {
-            logger.error("webapps文件夹为空", e);
-        }
-
+        super.startInternal();
     }
 
     @Override

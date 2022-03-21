@@ -23,7 +23,5 @@ public class ContextRuleSet extends RuleSetBase {
 
     @Override
     public void addRuleInstances(Digester digester) {
-        digester.addRule(prefix + "Context",
-                new LifecycleListenerRule("cn.weixiaochen.catalina.startup.ContextConfig"));
     }
 }

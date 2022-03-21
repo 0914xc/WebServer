@@ -88,6 +88,11 @@ public abstract class LifecycleBase implements Lifecycle {
         setStateInternal(state, null, true);
     }
 
+    @Override
+    public LifecycleState getState() {
+        return state;
+    }
+
     private void setStateInternal(LifecycleState state, Object data, boolean check) throws LifecycleException {
 
         if (check) {

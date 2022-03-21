@@ -35,9 +35,7 @@ public class StandardContext extends ContainerBase implements Context {
     @Override
     protected void startInternal() throws LifecycleException {
         // Notify our interested LifecycleListeners
-//        fireLifecycleEvent(Lifecycle.CONFIGURE_START_EVENT, null);
-
-        webConfig();
+        fireLifecycleEvent(Lifecycle.CONFIGURE_START_EVENT, null);
     }
 
     @Override
@@ -50,13 +48,7 @@ public class StandardContext extends ContainerBase implements Context {
 
     }
 
-    private void webConfig() {
-        Digester webDigester = createWebDigester();
 
-        // Process the default and application web.xml files
-        defualtConfig(webDigester);
-        applicationConfig(webDigester);
-    }
 
     @Override
     public String getPath() {
@@ -139,42 +131,6 @@ public class StandardContext extends ContainerBase implements Context {
             return urlPattern.indexOf('/') < 0;
         }
         return urlPattern.startsWith("/") && !urlPattern.contains("*.");
-    }
-
-    private Digester createWebDigester() {
-        Digester webDigester = new Digester();
-        webDigester.addRuleSet(new WebRuleSet());
-        return webDigester;
-    }
-
-    /**
-     * Process the default configuration file, if it exists.
-     */
-    private void defualtConfig(Digester webDigester) {
-        File file = new File(Constants.DefaultWebXml);
-        // todo: process the default web.xml file
-    }
-
-    /**
-     * Process the application configuration file, if it exists.
-     */
-    private void applicationConfig(Digester webDigester) {
-
-        // Open the application web.xml file, if it exists
-        File file = new File(getPath() + Constants.ApplicationWebXml);
-        if (!file.exists()) {
-            logger.info("Missing application web.xml, using defaults only");
-            return;
-        }
-
-        // Process the application web.xml file
-        webDigester.clear();
-        webDigester.push(this);
-        try {
-            webDigester.parse(file);
-        } catch (IOException | SAXException e) {
-            logger.error("Parse error in application web.xml");
-        }
     }
 
 }

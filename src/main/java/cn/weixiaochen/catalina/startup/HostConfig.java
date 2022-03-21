@@ -32,6 +32,7 @@ public class HostConfig implements LifecycleListener {
             return;
         }
 
+        // Process the event that has occurred
         if (event.getType().equals(Lifecycle.START_EVENT)) {
             start();
         }

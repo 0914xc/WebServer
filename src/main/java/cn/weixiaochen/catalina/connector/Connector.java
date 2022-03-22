@@ -4,6 +4,7 @@ import cn.weixiaochen.catalina.LifecycleException;
 import cn.weixiaochen.catalina.LifecycleBase;
 import cn.weixiaochen.catalina.Server;
 import cn.weixiaochen.catalina.Service;
+import cn.weixiaochen.coyote.AbstractProtocol;
 import cn.weixiaochen.coyote.Adapter;
 import cn.weixiaochen.coyote.ProtocolHandler;
 import cn.weixiaochen.coyote.http11.CoyoteAdapter;
@@ -21,6 +22,11 @@ public class Connector extends LifecycleBase {
     private Service service;
 
     private Server server;
+
+    /**
+     * The port number on which we listen for requests.
+     */
+    protected int port = -1;
 
     /**
      * Coyote protocol handler.
@@ -98,5 +104,14 @@ public class Connector extends LifecycleBase {
 
     public void setServer(Server server) {
         this.server = server;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+        ((AbstractProtocol)protocolHandler).setPort(port);
     }
 }

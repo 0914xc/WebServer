@@ -4,8 +4,7 @@ import cn.weixiaochen.coyote.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 
 /**
@@ -14,8 +13,6 @@ import java.net.Socket;
 public class Http11Processor extends AbstractProccesor {
 
     private static final Logger logger = LoggerFactory.getLogger(Http11Processor.class);
-
-    protected Adapter adapter;
 
     private final Request request;
     private final Response response;
@@ -33,7 +30,7 @@ public class Http11Processor extends AbstractProccesor {
 
             parseRequest(input, output);
 
-            adapter.service(request, response);
+            getAdapter().service(request, response);
 
             socket.close();
         } catch (Exception e) {
@@ -42,6 +39,11 @@ public class Http11Processor extends AbstractProccesor {
     }
 
     protected void parseRequest(InputStream input, OutputStream output) {
-
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        try {
+            logger.info(reader.readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

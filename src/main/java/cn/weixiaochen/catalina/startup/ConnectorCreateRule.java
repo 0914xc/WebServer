@@ -1,6 +1,5 @@
 package cn.weixiaochen.catalina.startup;
 
-import cn.weixiaochen.catalina.Service;
 import cn.weixiaochen.catalina.connector.Connector;
 import org.apache.commons.digester.Rule;
 import org.xml.sax.Attributes;

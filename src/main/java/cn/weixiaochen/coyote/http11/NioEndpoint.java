@@ -1,6 +1,8 @@
 package cn.weixiaochen.coyote.http11;
 
 import cn.weixiaochen.coyote.AbstractEndpoint;
+import cn.weixiaochen.coyote.AbstractProtocol;
+import cn.weixiaochen.coyote.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +23,8 @@ public class NioEndpoint extends AbstractEndpoint {
     public void startInternal() throws Exception {
         while(true) {
             Socket accept = this.serverSocket.accept();
-            // TODO process socket
+            Processor processor = ((AbstractProtocol) getProtocolHandler()).createProcessor();
+            processor.service(accept);
         }
     }
 

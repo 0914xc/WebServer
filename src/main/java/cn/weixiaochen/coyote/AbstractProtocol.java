@@ -14,10 +14,12 @@ public abstract class AbstractProtocol implements ProtocolHandler {
 
     public AbstractProtocol(AbstractEndpoint endpoint) {
         this.endpoint = endpoint;
+
     }
 
-    protected Adapter adapter;
-
+    protected AbstractEndpoint getEndpoint() {
+        return endpoint;
+    }
     @Override
     public void init() throws Exception {
         endpoint.init();
@@ -27,6 +29,8 @@ public abstract class AbstractProtocol implements ProtocolHandler {
     public void start() throws Exception {
         endpoint.start();
     }
+
+    protected Adapter adapter;
 
     @Override
     public Adapter getAdapter() {
@@ -46,5 +50,5 @@ public abstract class AbstractProtocol implements ProtocolHandler {
         endpoint.setPort(port);
     }
 
-    protected abstract Processor createProcessor();
+    public abstract Processor createProcessor();
 }

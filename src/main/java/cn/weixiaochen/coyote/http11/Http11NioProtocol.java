@@ -2,7 +2,6 @@ package cn.weixiaochen.coyote.http11;
 
 import cn.weixiaochen.catalina.connector.Connector;
 import cn.weixiaochen.coyote.AbstractProtocol;
-import cn.weixiaochen.coyote.Adapter;
 import cn.weixiaochen.coyote.Processor;
 
 /**
@@ -14,22 +13,13 @@ public class Http11NioProtocol extends AbstractProtocol {
 
     public Http11NioProtocol() {
         super(new NioEndpoint());
+        getEndpoint().setProtocolHandler(this);
     }
 
     @Override
-    public Adapter getAdapter() {
-        return null;
-    }
-
-    @Override
-    public void setAdapter(Adapter adapter) {
-        this.adapter = adapter;
-    }
-
-    @Override
-    protected Processor createProcessor() {
+    public Processor createProcessor() {
         Http11Processor processor = new Http11Processor();
-        processor.setAdapter(adapter);
+        processor.setAdapter(getAdapter());
         return processor;
     }
 }

@@ -28,4 +28,14 @@ public abstract class AbstractEndpoint {
     public void setPort(int port) {
         this.port = port;
     }
+
+    private ProtocolHandler protocolHandler;
+
+    public ProtocolHandler getProtocolHandler() {
+        return protocolHandler;
+    }
+
+    public void setProtocolHandler(ProtocolHandler protocolHandler) {
+        this.protocolHandler = protocolHandler;
+    }
 }

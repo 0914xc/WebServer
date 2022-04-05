@@ -8,3 +8,6 @@
    
 ### 参考资料
 + 《How Tomcat works》— 基于Tomcat4源码分析Tomcat
+
+### TodoList
++ 优化代码中的魔法值、注释、日志等。

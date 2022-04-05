@@ -101,6 +101,9 @@ public class StandardPipeline extends LifecycleBase implements Pipeline {
 
     @Override
     public Valve getFirst() {
-        return first;
+        if (first != null) {
+            return first;
+        }
+        return basic;
     }
 }

@@ -45,7 +45,8 @@ public class StandardService extends LifecycleBase implements Service {
 
     @Override
     public void addConnector(Connector connector) {
-        this.connectors.add(connector);
+        connector.setService(this);
+        connectors.add(connector);
     }
 
     @Override

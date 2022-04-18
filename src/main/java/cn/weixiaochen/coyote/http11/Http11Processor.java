@@ -26,13 +26,17 @@ public class Http11Processor extends AbstractProccesor {
     @Override
     public void service(Socket socket) {
         try {
+            // get input and output stream from socket
             InputStream input = socket.getInputStream();
             OutputStream output = socket.getOutputStream();
 
+            // parse request
             parseRequest(input, output);
 
-            // getAdapter().service(request, response);
+            // process request
+            getAdapter().service(request, response);
 
+            // close socket
             socket.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -40,10 +44,10 @@ public class Http11Processor extends AbstractProccesor {
     }
 
     /**
-     * 解析请求
+     * parse request
      *
-     * @param input  输入流
-     * @param output 输出流
+     * @param input  input stream
+     * @param output output stream
      */
     protected void parseRequest(InputStream input, OutputStream output) throws IOException {
         parseRequestLine(input);
@@ -54,9 +58,9 @@ public class Http11Processor extends AbstractProccesor {
     }
 
     /**
-     * 解析请求行
+     * parse request line
      *
-     * @param input 输入流
+     * @param input input stream
      */
     protected void parseRequestLine(InputStream input) throws IOException {
         String line = readline(input);
@@ -69,9 +73,9 @@ public class Http11Processor extends AbstractProccesor {
     }
 
     /**
-     * 解析请求头
+     * parse headers
      *
-     * @param input 输入流
+     * @param input input stream
      */
     protected void parseHeaders(InputStream input) throws IOException {
         String line = readline(input);
@@ -86,25 +90,25 @@ public class Http11Processor extends AbstractProccesor {
     }
 
     /**
-     * 解析请求体
+     * parse body
      *
-     * @param input 输入流
+     * @param input input stream
      */
     protected void parseBody(InputStream input) throws IOException {
         if (!request.getHeaders().containsKey("Content-Length")) {
             return;
         }
-        int contentLength = Integer.parseInt(request.getHeader("Content-Length"));
+        int contentLength = Integer.parseInt(request.getHeader("Content-Length").replace("\r", ""));
         byte[] bytes = new byte[contentLength];
         input.read(bytes);
         request.setBody(new String(bytes));
     }
 
     /**
-     * 读取一行
+     * read one line from input stream
      *
-     * @param input 输入流
-     * @return 读取的一行
+     * @param input input stream
+     * @return the one line which read from input stream
      */
     protected String readline(InputStream input) throws IOException {
         StringBuilder builder = new StringBuilder();

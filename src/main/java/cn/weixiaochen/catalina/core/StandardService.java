@@ -2,6 +2,7 @@ package cn.weixiaochen.catalina.core;
 
 import cn.weixiaochen.catalina.*;
 import cn.weixiaochen.catalina.connector.Connector;
+import cn.weixiaochen.catalina.mapper.MapperListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,19 @@ public class StandardService extends LifecycleBase implements Service {
 
     private Engine engine;
 
-    private List<Connector> connectors = new ArrayList<>();
+    /**
+     * The set of Connectors associated with this Service.
+     */
+    private final List<Connector> connectors = new ArrayList<>();
+
+    /**
+     * Mapper
+     */
+    private final Mapper mapper = new Mapper();
+
+
+    private final MapperListener mapperListener = new MapperListener(this);
+
 
     @Override
     protected void initInternal() throws LifecycleException {
@@ -50,16 +63,14 @@ public class StandardService extends LifecycleBase implements Service {
     }
 
     @Override
-    public Container getContainer() {
+    public Engine getContainer() {
         return this.engine;
     }
 
     @Override
-    public void setContainer(Container container) {
-        if (container instanceof Engine) {
-            ((Engine) container).setService(this);
-            this.engine = (Engine) container;
-        }
+    public void setContainer(Engine engine) {
+        engine.setService(this);
+        this.engine = engine;
     }
 
     @Override
@@ -72,4 +83,8 @@ public class StandardService extends LifecycleBase implements Service {
         this.server = server;
     }
 
+    @Override
+    public Mapper getMapper() {
+        return mapper;
+    }
 }

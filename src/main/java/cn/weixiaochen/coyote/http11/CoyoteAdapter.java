@@ -38,7 +38,19 @@ public class CoyoteAdapter implements Adapter {
         request.setResponse(response);
         response.setRequest(request);
 
-        // Calling the container
-        connector.getService().getContainer().getPipeline().getFirst().invoke(request, response);
+        // Parse and set Catalina and configuration specific
+        postPrarseSuccess = postParseRequest(req, request, res, response);
+
+        if (postPrarseSuccess) {
+            // Calling the container
+            connector.getService().getContainer().getPipeline().getFirst().invoke(request, response);
+        }
+    }
+
+    private boolean postParseRequest(cn.weixiaochen.coyote.Request req, Request request,
+                                     cn.weixiaochen.coyote.Response res, Response response) {
+
+        connector.getService().getMapper().map(req, request);
+        return true;
     }
 }

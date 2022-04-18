@@ -14,7 +14,7 @@ public interface Service extends Lifecycle {
      * @return the <code>Container</code> that handles requests for all
      * <code>Connectors</code> associated with this Service.
      */
-    Container getContainer();
+    Engine getContainer();
 
     /**
      * Set the <code>Container</code> that handles requests for all
@@ -22,7 +22,7 @@ public interface Service extends Lifecycle {
      *
      * @param container The new Container
      */
-    void setContainer(Container container);
+    void setContainer(Engine container);
 
     /**
      * @return the <code>Server</code> with which we are associated (if any).
@@ -35,5 +35,7 @@ public interface Service extends Lifecycle {
      * @param server The server that owns this Service
      */
     void setServer(Server server);
+
+    Mapper getMapper();
 
 }

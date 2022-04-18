@@ -48,8 +48,6 @@ public class StandardContext extends ContainerBase implements Context {
 
     }
 
-
-
     @Override
     public String getPath() {
         return path;

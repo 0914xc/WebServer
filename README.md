@@ -1,6 +1,23 @@
-# xc-tomcat
+# HttpServer
 
-> 为了学习Tomcat，手写的简易版Tomcat。
+> A tiny http server for web application
+
+## Function
+
+Http protocol
+Parse request/response
+Session
+Cookie
+Forward
+Redirect
+Template Engine
+多线程
+web.xml
+NIO
+BIO
+AIO
+Filter
+Listener
 
 ### 笔记
 1. [如何用IDEA构建Tomcat源码？](https://www.yuque.com/0914xc/eb8mru/ornhnz)

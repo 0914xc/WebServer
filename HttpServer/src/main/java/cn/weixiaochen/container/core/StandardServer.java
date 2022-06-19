@@ -23,15 +23,16 @@ public class StandardServer implements Server {
             // create a server socket
             ServerSocket serverSocket = new ServerSocket(port);
 
-            // wait for connection
-            Socket socket = serverSocket.accept();
+            while(true) {
+                // accept a connection
 
-            // process the request
-            process(socket);
-            logger.info("Received a request from {}", socket.getInetAddress());
+                // wait for connection
+                Socket socket = serverSocket.accept();
 
-            // close the socket
-            socket.close();
+                // process the request
+                process(socket);
+                logger.info("Received a request from {}", socket.getInetAddress());
+            }
         } catch (Exception e) {
             logger.error("Server start failed.", e);
             System.exit(1);

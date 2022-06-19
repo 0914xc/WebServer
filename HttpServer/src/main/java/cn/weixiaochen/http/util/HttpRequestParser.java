@@ -57,28 +57,29 @@ public class HttpRequestParser {
                 }
                 if (requestLine.isEmpty()) {
                     parsingRequestLine++;
-                } else {
-                    if (parsingRequestLine < 1) {
-                        parseRequestLine(requestLine);
-                        parsingRequestLine++;
-                    } else if (parsingRequestLine < 2) {
-                        parseRequestHeader(requestLine);
-                    } else if (parsingRequestLine < 3) {
-                        parseRequestBody(requestLine);
-                        parsingRequestLine++;
-                    }
+                    continue;
+                }
+                if (parsingRequestLine == 0) {
+                    parseRequestLine(requestLine);
+                    parsingRequestLine++;
+                } else if (parsingRequestLine == 1) {
+                    parseRequestHeader(requestLine);
+                } else if (parsingRequestLine == 2) {
+                    parseRequestBody(requestLine);
+                    break;
                 }
             } catch (IOException e) {
                 logger.error("HttpRequestParser doParse failed.", e);
                 break;
             }
         }
+        logger.info("done");
     }
 
     private String readLine() throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         int i;
-        while ((i = inputStream.read()) != -1) {
+        while (inputStream.available() > 0 && (i = inputStream.read()) != -1) {
             if (i == CR) {
                 i = inputStream.read();
                 if (i == LF) {

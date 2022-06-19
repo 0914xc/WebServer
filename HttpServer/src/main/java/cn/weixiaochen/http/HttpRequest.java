@@ -1,7 +1,5 @@
 package cn.weixiaochen.http;
 
-import cn.weixiaochen.http.Request;
-
 import java.util.HashMap;
 import java.util.Map;
 
